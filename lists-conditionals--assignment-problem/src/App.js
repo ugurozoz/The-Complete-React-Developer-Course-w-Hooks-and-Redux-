@@ -1,10 +1,54 @@
 import React, { Component } from 'react';
+import ValidationComponent from './ValidationComponent/ValidationComponent' 
+import CharComponent from './CharComponent/CharComponent'
 import './App.css';
 
 class App extends Component {
+
+  state = {
+    inputText: ''
+  }
+
+  changeInputHandler = (event) => {
+    const state = { ...this.state }
+    state.inputText = event.target.value
+    this.setState({ ...state })    
+  }
+
+
+  letterClickHandler = (index) => {
+    const state = { ...this.state }
+    const text = state.inputText.split('')
+    
+    text.splice(index, 1)
+    state.inputText = text.join('')
+    console.log(state)
+    this.setState({ ...state })
+  }
+ 
+
   render() {
+    const textLength = this.state.inputText.length;
+    const letters = this.state.inputText.split('');
+    console.log('STATE',this.state)    
+
     return (
       <div className="App">
+        <input type="text" onChange={(event) => this.changeInputHandler(event)} size="40" value={this.state.inputText}/>
+        <p><strong>Length of text entered:{textLength}</strong></p>
+        <ValidationComponent textLength={textLength} />        
+        {
+          letters.map((letter,index) => {
+            return (
+              <CharComponent
+                letter={letter}
+                click={() => this.letterClickHandler(index)} 
+                key = {`letter${index}`} 
+                />
+            )
+          })
+        }        
+
         <ol>
           <li>Create an input field (in App component) with a change listener which outputs the length of the entered text below it (e.g. in a paragraph).</li>
           <li>Create a new component (=> ValidationComponent) which receives the text length as a prop</li>
