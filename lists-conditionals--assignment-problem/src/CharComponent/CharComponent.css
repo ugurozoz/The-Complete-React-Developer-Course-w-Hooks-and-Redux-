@@ -1,0 +1,18 @@
+.CharComponent{
+  display: inline-block; 
+  padding: 10px; 
+  text-align: center;
+  margin:0 5px 10px 0 ;
+
+  border: 1px solid black;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 16px;
+
+}
+
+.CharComponent:hover{
+  background-color: #f00;
+  border: 1px solid #600;
+  color: #fff;
+}
