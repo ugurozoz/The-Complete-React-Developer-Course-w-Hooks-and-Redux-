@@ -5,6 +5,11 @@ import Cockpit from "../components/Cockpit/Cockpit";
 // import ErrorBoundary from "./ErrorBoundary/ErrorBoundary";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    console.log('[App.js] constructor');
+  }
+
   state = {
     persons: [
       { id: "prs1", name: "Max", age: 28 },
@@ -14,6 +19,20 @@ class App extends Component {
     otherState: "some other value",
     showPersons: false,
   };
+
+  static getDerivedStateFromProps(props, state) {
+    console.log('[App.js] getDerivedStateFromProps', props)
+    return state;  
+  }
+
+  // componentWillMount() {
+  //   console.log('[App.js] componentDidMount')    
+  // }
+
+  componentDidMount() {
+    console.log('[App.js] componentWillMount')
+  }
+    
 
   deletePersonHandler = (personIndex) => {
     const persons = [...this.state.persons];
@@ -38,23 +57,19 @@ class App extends Component {
     const person = {
       ...this.state.persons[personIndex],
     };
-
     person.name = event.target.value;
     const persons = [...this.state.persons];
-
     persons[personIndex] = person;
-
     this.setState({ persons: persons });
   };
 
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons;
     this.setState({ showPersons: !doesShow });
-
-    console.log(this.state);
   };
 
   render() {
+    console.log('[App.js] render');
     let persons = null;
 
     if (this.state.showPersons) {
@@ -70,6 +85,7 @@ class App extends Component {
     return (
       <div className={classes.App}>
         <Cockpit
+          title={this.props.appTitle}
           persons={this.state.persons}
           showPersons={this.state.showPersons}
           btnClick={this.togglePersonsHandler}

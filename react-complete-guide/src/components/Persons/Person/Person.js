@@ -7,9 +7,8 @@ import classes from './Person.css'
 
  
 
-const person = (props) => {
-
-  
+const person = (props) => {  
+  console.log('[Person.js] rendering...');
  
   return (
     //<div className="Person" style={style}>
@@ -17,12 +16,7 @@ const person = (props) => {
        <p onClick={props.click}>Hi, I'm {props.name} and i am {props.age} years old.</p>
       <p>{props.children}</p>
       <input type="text" onChange={props.changed} value={props.name} />
-
     </div>
-     
-    
-      
-    
     )
 }
 
