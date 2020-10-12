@@ -7,7 +7,7 @@ import Cockpit from "../components/Cockpit/Cockpit";
 class App extends Component {
   constructor(props) {
     super(props);
-    console.log('[App.js] constructor');
+    console.log("[App.js] constructor");
   }
 
   state = {
@@ -18,21 +18,31 @@ class App extends Component {
     ],
     otherState: "some other value",
     showPersons: false,
+    showCockpit: true,
   };
 
   static getDerivedStateFromProps(props, state) {
-    console.log('[App.js] getDerivedStateFromProps', props)
-    return state;  
+    console.log("[App.js] getDerivedStateFromProps", props);
+    return state;
   }
 
   // componentWillMount() {
-  //   console.log('[App.js] componentDidMount')    
+  //   console.log('[App.js] componentDidMount')
   // }
 
   componentDidMount() {
-    console.log('[App.js] componentWillMount')
+    console.log("[App.js] componentDidMount");
   }
-    
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("[App.js] shouldComponentUpdate");
+    return true;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log("[App.js] componentDidUpdate");
+    //console.log(snapshot)
+  }
 
   deletePersonHandler = (personIndex) => {
     const persons = [...this.state.persons];
@@ -69,7 +79,7 @@ class App extends Component {
   };
 
   render() {
-    console.log('[App.js] render');
+    console.log("[App.js] render");
     let persons = null;
 
     if (this.state.showPersons) {
@@ -84,12 +94,19 @@ class App extends Component {
 
     return (
       <div className={classes.App}>
-        <Cockpit
+        <button
+          onClick={() => {
+            this.setState({ showCockpit: false });
+          }}
+        >
+          Remove Cockpit
+        </button>
+        {this.state.showCockpit ? <Cockpit
           title={this.props.appTitle}
-          persons={this.state.persons}
+          personsLength={this.state.persons.length}
           showPersons={this.state.showPersons}
           btnClick={this.togglePersonsHandler}
-        />
+        />:null}
         {persons}
       </div>
     );
