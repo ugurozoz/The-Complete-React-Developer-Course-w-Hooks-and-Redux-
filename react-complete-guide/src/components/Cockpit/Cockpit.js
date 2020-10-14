@@ -1,32 +1,30 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import classes from "./Cockpit.css";
+import AuthContext from "../../context/auth-context";
 
 const cockpit = (props) => {
   const toggleBtnRef = useRef(null);
-  
-
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    console.log('[Cockpit.js] useEffect');
+    console.log("[Cockpit.js] useEffect");
     // setTimeout(() => {
     //   alert('Saved data to cloud!');
     // }, 1000);
     toggleBtnRef.current.click();
-    return () => {      
-      console.log('[Cockpit.js] cleanup work in useEffect');
-    } 
-  }, []);
-  
-  useEffect(() => {
-    console.log('[Cockpit.js] 2nd useEffect');
     return () => {
-      console.log('[Cockpit.js] cleanup work in 2nd useEffect');
-    }
+      console.log("[Cockpit.js] cleanup work in useEffect");
+    };
+  }, []);
 
-   })
+  useEffect(() => {
+    console.log("[Cockpit.js] 2nd useEffect");
+    return () => {
+      console.log("[Cockpit.js] cleanup work in 2nd useEffect");
+    };
+  });
 
-
-  let btnClass = ''; 
+  let btnClass = "";
 
   const assignedClasses = []; //'red', 'bold'
   if (props.personsLength <= 2) {
@@ -45,7 +43,7 @@ const cockpit = (props) => {
       <button ref={toggleBtnRef} className={btnClass} onClick={props.btnClick}>
         Toggle Persons
       </button>
-      <button onClick={props.login}>Login</button>
+      <button onClick={authContext.login}>Login</button>
     </div>
   );
 };
