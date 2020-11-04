@@ -5,6 +5,7 @@ import Blog from "./containers/Blog/Blog";
 class App extends Component {
   render() {
     return (
+      // <BrowserRouter basename="/my-app"> if app is in special dir. for routing
       <BrowserRouter>
         <div className="App">
           <Blog />
