@@ -1,0 +1,7 @@
+.Ingredient {
+  border: 1px solid #ccc;
+  background-color: #eee;
+  border-radius: 3px;
+  padding: 0 2px;
+  margin: 0 10px 0 0;
+}

@@ -27,7 +27,7 @@ class BurgerBuilder extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props);
+    //console.log(this.props);
     const ingredients = axios
       .get("https://react-u-burger.firebaseio.com/ingredients.json")
       .then((response) => {
@@ -98,7 +98,7 @@ class BurgerBuilder extends Component {
 
     queryParams.push('price='+this.state.totalPrice)
     const queryString = queryParams.join("&");
-    console.log(queryString);
+    //console.log(queryString);
 
     this.props.history.push({
       pathname: "/checkout",

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import Order from "../../components/Order/Order";
+import classes from "./Orders.css";
 import axios from "../../axios-orders";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 
@@ -36,14 +37,18 @@ class Orders extends Component {
       orders = this.state.orders.map((order) => {
         let price = +order.price;
         price = price.toFixed(2);
-        let ingredients = []
+        let ingredients = [];
         for (let ingredient in order.ingredients) {
-          console.log("ING>>", ingredient, order.ingredients[ingredient])
-          ingredients.push(`${ingredient}(${order.ingredients[ingredient]}), `)
-        }        
-        return <Order key={order.id} price={price} ingredients={ingredients} />;
+          //console.log("ING>>", ingredient, order.ingredients[ingredient])
+          ingredients.push(`${ingredient}(${order.ingredients[ingredient]}) `);
+        }
+        let ingredientsStyled = ingredients.map((ingredient, index) => (
+          <span className={classes.Ingredient} key={index}>{ingredient}</span>
+        ));
+        return (
+          <Order key={order.id} price={price} ingredients={ingredientsStyled} />
+        );
       });
-     
     }
     return <div>{orders}</div>;
   }
