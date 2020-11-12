@@ -6,9 +6,9 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "ADD":
       const newUser ={
-        id: new Date(),
-        name: action.name,
-        age: Math.floor(Math.random() * 30),
+        id: Math.random(),
+        name: action.personData.name,
+        age: action.personData.age,
       }
       return {
         ...state,

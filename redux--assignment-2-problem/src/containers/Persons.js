@@ -4,8 +4,6 @@ import Person from "../components/Person/Person";
 import AddPerson from "../components/AddPerson/AddPerson";
 
 class Persons extends Component {
-  
-
   render() {
     return (
       <div>
@@ -31,15 +29,17 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAddUser: () =>
+    onAddUser: (name, age) =>
       dispatch({
         type: "ADD",
-        name: "MAX",
+        personData: {
+        name: name,
+        age: age,}
       }),
     onDeleteUser: (id) =>
       dispatch({
         type: "DELETE",
-        id:id
+        id: id,
       }),
   };
 };
