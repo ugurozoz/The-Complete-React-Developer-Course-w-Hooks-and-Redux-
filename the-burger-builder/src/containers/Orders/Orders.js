@@ -1,57 +1,56 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
 import Order from "../../components/Order/Order";
 import classes from "./Orders.css";
 import axios from "../../axios-orders";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
+import * as actions from "../../store/actions/index";
+import Spinner from "../../components/UI/Spinner/Spinner";
 
 class Orders extends Component {
-  state = {
-    orders: [],
-    loading: true,
-    error: false,
-  };
-
   componentDidMount() {
-    const orders = axios
-      .get("https://react-u-burger.firebaseio.com/orders.json")
-      .then((response) => {
-        const fetchedORders = [];
-        for (let key in response.data) {
-          fetchedORders.push({ ...response.data[key], id: key });
-        }
-        this.setState({ loading: false });
-        this.setState({ orders: fetchedORders });
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        this.setState({ error: true });
-      });
+    this.props.onFetchOrders();
   }
 
   render() {
     let orders = null;
-    if (this.state.error) {
-      orders = <h1>Some error occured</h1>;
-    } else {
-      orders = this.state.orders.map((order) => {
-        let price = +order.price;
-        price = price.toFixed(2);
-        let ingredients = [];
-        for (let ingredient in order.ingredients) {
-          //console.log("ING>>", ingredient, order.ingredients[ingredient])
-          ingredients.push(`${ingredient}(${order.ingredients[ingredient]}) `);
-        }
-        let ingredientsStyled = ingredients.map((ingredient, index) => (
-          <span className={classes.Ingredient} key={index}>{ingredient}</span>
-        ));
-        return (
-          <Order key={order.id} price={price} ingredients={ingredientsStyled} />
-        );
-      });
-    }
-    return <div>{orders}</div>;
+
+    orders = this.props.orders.map((order) => {
+      let price = +order.price;
+      price = price.toFixed(2);
+      let ingredients = [];
+      for (let ingredient in order.ingredients) {
+        ingredients.push(`${ingredient}(${order.ingredients[ingredient]}) `);
+      }
+      let ingredientsStyled = ingredients.map((ingredient, index) => (
+        <span className={classes.Ingredient} key={index}>
+          {ingredient}
+        </span>
+      ));
+      return (
+        <Order key={order.id} price={price} ingredients={ingredientsStyled} />
+      );
+    });
+
+    return <div>{this.props.loading ? <Spinner /> : orders}</div>;
   }
 }
 
-export default withErrorHandler(Orders, axios);
+const mapStateToProps = (state) => {
+  return {
+    orders: state.oR.orders,
+    loading: state.oR.loading,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFetchOrders: () => dispatch(actions.fetchOrders()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandler(Orders, axios));

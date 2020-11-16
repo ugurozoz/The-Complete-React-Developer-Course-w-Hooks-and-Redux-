@@ -8,19 +8,17 @@ import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
-import * as burgerBuilderActions from "../../store/actions/index";
+import * as actions from "../../store/actions/index";
 import axios from "../../axios-orders";
 
-
 class BurgerBuilder extends Component {
-  state = {    
+  state = {
     purchasing: false,
-    
   };
 
   componentDidMount() {
-    console.log('>>>>', this.props);
-    this.props.onInitIngredients()
+    console.log(">>>>", this.props);
+    this.props.onInitIngredients();
     
   }
 
@@ -33,7 +31,6 @@ class BurgerBuilder extends Component {
     return sum > 0;
   }
 
-
   purchaseHandler = () => {
     this.setState({ purchasing: true });
   };
@@ -42,7 +39,8 @@ class BurgerBuilder extends Component {
     this.setState({ purchasing: false });
   };
 
-  purchaseContinueHandler = () => {    
+  purchaseContinueHandler = () => {
+    this.props.onInitPurchase();
     this.props.history.push("/checkout");
   };
 
@@ -57,8 +55,12 @@ class BurgerBuilder extends Component {
     }
 
     let orderSummary = null;
-    console.log('ERROR?',this.props.error)
-    let burger = this.props.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
+    console.log("ERROR?", this.props.error);
+    let burger = this.props.error ? (
+      <p>Ingredients can't be loaded!</p>
+    ) : (
+      <Spinner />
+    );
 
     if (this.props.ings) {
       burger = (
@@ -85,8 +87,6 @@ class BurgerBuilder extends Component {
       );
     }
 
-    
-
     return (
       <Aux>
         <Modal
@@ -105,17 +105,22 @@ const mapStateToProps = (state) => {
   return {
     ings: state.bbR.ingredients,
     price: state.bbR.totalPrice,
-    error: state.oR.error
+    error: state.oR.error,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onIngredientAdded: (ingName) => dispatch(burgerBuilderActions.addIngredient(ingName)),
-    onIngredientRemove: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName)),
-    onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
-    
+    onIngredientAdded: (ingName) =>
+      dispatch(actions.addIngredient(ingName)),
+    onIngredientRemove: (ingName) =>
+      dispatch(actions.removeIngredient(ingName)),
+    onInitIngredients: () => dispatch(actions.initIngredients()),
+    onInitPurchase : () => dispatch(actions.purchaseInit())
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandler(BurgerBuilder, axios));
