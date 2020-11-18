@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from 'react-router-dom'
 
 import Input from "../../components/UI/Input/Input";
 import Button from "../../components/UI/Button/Button";
@@ -134,7 +135,7 @@ class Auth extends Component {
       <div>
         <form onSubmit={this.submitHandler}>
           {formElements}
-          <Button btnType="Success">LOGIN</Button>
+          <Button btnType="Success">SUBMIT</Button>
         </form>
         <Button btnType="Danger" clicked={this.switchAuthHandler}>
           SWITCH TO {this.state.isSignup ? "SIGNIN" : "SIGNUP"}{" "}
@@ -149,8 +150,14 @@ class Auth extends Component {
       errorMessage = <p>{this.props.error.message}</p>;
     }
 
+    let authRedirect = null
+    if (this.props.isAuthenticated) {
+      authRedirect = <Redirect to="/"/>
+    }
+
     return (
       <div className={classes.Auth}>
+        {authRedirect}
         {form}
         {errorMessage}
       </div>
@@ -165,6 +172,7 @@ const mapStateToProps = (state) => {
   return {
     loading: state.aR.loading,
     error: state.aR.error,
+    isAuthenticated: state.aR.token !== null
   };
 };
 

@@ -32,7 +32,12 @@ class BurgerBuilder extends Component {
   }
 
   purchaseHandler = () => {
-    this.setState({ purchasing: true });
+    if (this.props.isAuth) {
+      this.setState({ purchasing: true });
+    } else {
+      this.props.history.push('/auth')
+    }
+    
   };
 
   purchaseCancelHandler = () => {
@@ -72,7 +77,9 @@ class BurgerBuilder extends Component {
             disabled={disabledInfo}
             purchaseable={this.purchaseState(this.props.ings)}
             ordered={this.purchaseHandler}
+            isAuth={this.props.isAuthenticated}
             price={this.props.price}
+
           />
         </Aux>
       );
@@ -106,6 +113,7 @@ const mapStateToProps = (state) => {
     ings: state.bbR.ingredients,
     price: state.bbR.totalPrice,
     error: state.oR.error,
+    isAuthenticated: state.aR.token !== null
   };
 };
 
