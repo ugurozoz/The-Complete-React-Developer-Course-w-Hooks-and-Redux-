@@ -14,12 +14,12 @@ import * as actions from "./store/actions/index";
 // import BurgerIngredient from "./components/Burger/BurgerIngredient/BurgerIngredient"
 class App extends Component {
   componentDidMount() {
-    //this.props.onTryAutoSignup();
+    this.props.onTryAutoSignup();
   }
   render() {
     let routes = (
-      <Switch>
-        <Route path="/auth" component={Auth} />
+      <Switch>     
+      <Route path="/auth" component={Auth} />  
         <Route path="/" exact component={BurgerBuilder} />
         <Redirect to="/" />
       </Switch>
@@ -31,6 +31,7 @@ class App extends Component {
           <Route path="/checkout" component={Checkout} />
           <Route path="/orders" component={Orders} />
           <Route path="/logout" component={Logout} />
+          <Route path="/auth" component={Auth} />
           <Route path="/" exact component={BurgerBuilder} />
           <Redirect to="/" />
         </Switch>
@@ -40,6 +41,7 @@ class App extends Component {
     return (
       <div>
         <Layout>
+        
           {routes}
         </Layout>
       </div>
