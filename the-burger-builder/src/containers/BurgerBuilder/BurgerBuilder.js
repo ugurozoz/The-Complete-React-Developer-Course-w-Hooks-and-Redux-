@@ -32,10 +32,10 @@ class BurgerBuilder extends Component {
   }
 
   purchaseHandler = () => {
-    if (this.props.isAuth) {
+    if (this.props.isAuthenticated) {
       this.setState({ purchasing: true });
     } else {
-      this.props.onSetRedirectPath('/checkout')
+      this.props.onSetAuthRedirectPath('/checkout')
       this.props.history.push('/auth')
     }
     
@@ -60,8 +60,7 @@ class BurgerBuilder extends Component {
       //console.log("INGS, ",disabledInfo[key])
     }
 
-    let orderSummary = null;
-    console.log("ERROR?", this.props.error);
+    let orderSummary = null;    
     let burger = this.props.error ? (
       <p>Ingredients can't be loaded!</p>
     ) : (
@@ -126,7 +125,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.removeIngredient(ingName)),
     onInitIngredients: () => dispatch(actions.initIngredients()),
     onInitPurchase: () => dispatch(actions.purchaseInit()),
-    onSetRedirectPath: (path) => dispatch(actions.setAuthRedirect(path))
+    onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirect(path))
   };
 };
 

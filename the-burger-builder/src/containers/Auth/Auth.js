@@ -157,10 +157,12 @@ class Auth extends Component {
       errorMessage = <p>{this.props.error.message}</p>;
     }
 
+
+    console.log("REDIRECT",this.props.authRedirectPath, this.props.isAuthenticated)
     let authRedirect = null
     if (this.props.isAuthenticated) {
-      console.log("REDIRECT",this.props.authRedirect)
-      authRedirect = <Redirect to={this.props.authRedirect}/>
+      console.log("REDIRECT",this.props.authRedirectPath)
+      authRedirect = <Redirect to={this.props.authRedirectPath}/>
     }
 
     return (
@@ -182,7 +184,7 @@ const mapStateToProps = (state) => {
     error: state.aR.error,
     isAuthenticated: state.aR.token !== null,
     building: state.bbR.building,
-    authRedirect: state.aR.authRedirectPath
+    authRedirectPath: state.aR.authRedirectPath
   };
 };
 
