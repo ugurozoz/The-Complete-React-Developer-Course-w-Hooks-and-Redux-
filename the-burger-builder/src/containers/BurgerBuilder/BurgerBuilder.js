@@ -17,9 +17,7 @@ class BurgerBuilder extends Component {
   };
 
   componentDidMount() {
-    console.log(">>>>", this.props);
     this.props.onInitIngredients();
-    
   }
 
   purchaseState(ingredients) {
@@ -35,10 +33,9 @@ class BurgerBuilder extends Component {
     if (this.props.isAuthenticated) {
       this.setState({ purchasing: true });
     } else {
-      this.props.onSetAuthRedirectPath('/checkout')
-      this.props.history.push('/auth')
+      this.props.onSetAuthRedirectPath("/checkout");
+      this.props.history.push("/auth");
     }
-    
   };
 
   purchaseCancelHandler = () => {
@@ -57,10 +54,9 @@ class BurgerBuilder extends Component {
 
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0;
-      //console.log("INGS, ",disabledInfo[key])
     }
 
-    let orderSummary = null;    
+    let orderSummary = null;
     let burger = this.props.error ? (
       <p>Ingredients can't be loaded!</p>
     ) : (
@@ -79,7 +75,6 @@ class BurgerBuilder extends Component {
             ordered={this.purchaseHandler}
             isAuth={this.props.isAuthenticated}
             price={this.props.price}
-
           />
         </Aux>
       );
@@ -113,19 +108,19 @@ const mapStateToProps = (state) => {
     ings: state.bbR.ingredients,
     price: state.bbR.totalPrice,
     error: state.oR.error,
-    isAuthenticated: state.aR.token !== null
+    isAuthenticated: state.aR.token !== null,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onIngredientAdded: (ingName) =>
-      dispatch(actions.addIngredient(ingName)),
+    onIngredientAdded: (ingName) => dispatch(actions.addIngredient(ingName)),
     onIngredientRemove: (ingName) =>
       dispatch(actions.removeIngredient(ingName)),
     onInitIngredients: () => dispatch(actions.initIngredients()),
     onInitPurchase: () => dispatch(actions.purchaseInit()),
-    onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
+    onSetAuthRedirectPath: (path) =>
+      dispatch(actions.setAuthRedirectPath(path)),
   };
 };
 

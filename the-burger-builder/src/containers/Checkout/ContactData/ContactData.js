@@ -8,6 +8,7 @@ import axios from "../../../axios-orders";
 import Input from "../../../components/UI/Input/Input";
 import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
 import * as actions from "../../../store/actions/index";
+import { updateObject, checkValidity } from "../../../shared/utility";
 
 class ContactData extends Component {
   state = {
@@ -75,6 +76,7 @@ class ContactData extends Component {
         value: "",
         validation: {
           required: true,
+          isEmail: true,
         },
         valid: false,
         touched: false,
@@ -92,13 +94,12 @@ class ContactData extends Component {
         valid: true,
       },
     },
-    formIsValid: false
+    formIsValid: false,
   };
 
   componentDidMount() {}
 
   orderHandler = (event) => {
-    //console.log("PRICE >>>", this.props.ingredients);
     event.preventDefault();
     const formData = {};
     for (let formElementIdentifier in this.state.orderForm) {
@@ -106,52 +107,39 @@ class ContactData extends Component {
         formElementIdentifier
       ].value;
     }
-    console.log("form DATA", formData);
+
     const order = {
       ingredients: this.props.ings,
       price: this.props.price,
       orderData: formData,
-      userId:this.props.userId
+      userId: this.props.userId,
     };
-    this.props.onOrderBurger(order,this.props.token)
+    this.props.onOrderBurger(order, this.props.token);
   };
 
-  checkValidty(value, rules) {
-    let isValid = true;
-    if (rules.required) {
-      isValid = value.trim() !== "" && isValid;
-    }
-
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-
-    return isValid;
-  }
-
   inputChangedHandler = (event, inputIdentifier) => {
-    console.log("CHANGE EVENT", event.target.value, inputIdentifier);
-    const updatedORderForm = { ...this.state.orderForm };
-
-    const updatedFormElement = { ...updatedORderForm[inputIdentifier] };
-    updatedFormElement.value = event.target.value;
-    updatedFormElement.valid = this.checkValidty(
-      updatedFormElement.value,
-      updatedFormElement.validation
+    const updatedFormElement = updateObject(
+      this.state.orderForm[inputIdentifier],
+      {
+        value: event.target.value,
+        valid: checkValidity(
+          event.target.value,
+          this.state.orderForm[inputIdentifier].validation
+        ),
+        touched: true,
+      }
     );
-    updatedORderForm[inputIdentifier] = updatedFormElement;
-    updatedFormElement.touched = true;
+
+    const updatedOrderForm = updateObject(this.state.orderForm, {
+      [inputIdentifier]: updatedFormElement,
+    });
 
     let formIsValid = true;
-    for (let inputIdentifier in updatedORderForm) {
-      formIsValid = updatedORderForm[inputIdentifier].valid && formIsValid;
+    for (let inputIdentifier in updatedOrderForm) {
+      formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
     }
 
-    this.setState({ orderForm: updatedORderForm, formIsValid: formIsValid });
+    this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
   };
 
   render() {
@@ -209,14 +197,18 @@ const mapStateToProps = (state) => {
     price: state.bbR.totalPrice,
     loading: state.oR.loading,
     token: state.aR.token,
-    userId: state.aR.userId
+    userId: state.aR.userId,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onOrderBurger:(orderData,token) => dispatch(actions.purchaseBurger(orderData,token))
-  }
-}
+    onOrderBurger: (orderData, token) =>
+      dispatch(actions.purchaseBurger(orderData, token)),
+  };
+};
 
-export default connect(mapStateToProps,mapDispatchToProps)(withErrorHandler(ContactData, axios));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandler(ContactData, axios));
