@@ -58,14 +58,19 @@ class App extends Component {
                 height: 100,
                 margin: 'auto',
                 opacity: state === 'exiting' ? 0 : 1,
-                transition: 'all 1s ease-out',
+                transition: 'all 1s ease-out' 
               }}
             ></div>
           )}
         </Transition>
+        
 
-        <Modal show={this.state.modalShow} closed={this.hideModal} />
-
+        
+          
+              <Modal show={this.state.modalShow} closed={this.hideModal} />              
+            
+        
+        
         {this.state.modalShow ? <Backdrop show /> : null}
         <button className='Button' onClick={this.showModal}>
           Open Modal
