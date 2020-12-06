@@ -3,7 +3,8 @@ import React from 'react';
 import './IngredientList.css';
 import LoadingIndicator from '../UI/LoadingIndicator';
 
-const IngredientList = props => {
+const IngredientList = (props) => {
+  console.log('RENDERING INGREDIENT LIST')
   const { isLoading } = props 
   return (
     <section className="ingredient-list">
