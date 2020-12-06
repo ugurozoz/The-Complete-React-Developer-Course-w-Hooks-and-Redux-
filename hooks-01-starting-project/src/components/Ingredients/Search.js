@@ -1,49 +1,60 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import Card from '../UI/Card';
+import ErrorModal from '../UI/ErrorModal';
+import useHttp from '../../hooks/http';
 import './Search.css';
 
-const Search = React.memo((props) => {
+const Search = React.memo(props => {
   const { onLoadIngredients } = props;
   const [enteredFilter, setEnteredFilter] = useState('');
   const inputRef = useRef();
+  const { isLoading, data, error, sendRequest, clear } = useHttp();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (enteredFilter === inputRef.current.value) {
-        const queryParam =
+        const query =
           enteredFilter.length === 0
             ? ''
             : `?orderBy="title"&equalTo="${enteredFilter}"`;
-        fetch(
-          'https://hooks-u-default-rtdb.firebaseio.com/ingredients.json' +
-            queryParam
-        )
-          .then((response) => response.json())
-          .then((responseData) => {
-            const loadedIngredients = Object.keys(responseData).map((key) => ({
-              id: key,
-              title: responseData[key].title,
-              amount: responseData[key].amount,
-            }));
-
-            onLoadIngredients(loadedIngredients);
-          });
+        sendRequest(
+          'https://hooks-u-default-rtdb.firebaseio.com/ingredients.json' + query,
+          'GET'
+        );
       }
     }, 500);
-    return () => {clearTimeout(timer)}
-  }, [enteredFilter, onLoadIngredients, inputRef]);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [enteredFilter, inputRef, sendRequest]);
+
+  useEffect(() => {
+    if (!isLoading && !error && data) {
+      const loadedIngredients = [];
+      for (const key in data) {
+        loadedIngredients.push({
+          id: key,
+          title: data[key].title,
+          amount: data[key].amount
+        });
+      }
+      onLoadIngredients(loadedIngredients);
+    }
+  }, [data, isLoading, error, onLoadIngredients]);
 
   return (
-    <section className='search'>
+    <section className="search">
+      {error && <ErrorModal onClose={clear}>{error}</ErrorModal>}
       <Card>
-        <div className='search-input'>
+        <div className="search-input">
           <label>Filter by Title</label>
+          {isLoading && <span>Loading...</span>}
           <input
             ref={inputRef}
-            type='text'
+            type="text"
             value={enteredFilter}
-            onChange={(event) => setEnteredFilter(event.target.value)}
+            onChange={event => setEnteredFilter(event.target.value)}
           />
         </div>
       </Card>
